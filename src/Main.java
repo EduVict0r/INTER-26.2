@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import javax.swing.SwingUtilities;
 
 public class Main {
 
@@ -9,7 +10,7 @@ public class Main {
         FuncionarioService funcionarioService =
                 new FuncionarioService();
 
-        System.out.print("Login: ");
+        System.out.print("Email: ");
         String login = scanner.nextLine();
 
         System.out.print("Senha: ");
@@ -21,7 +22,7 @@ public class Main {
         if (funcionario == null) {
 
             System.out.println(
-                    "Login ou senha inválidos."
+                    "Email ou senha inválidos."
             );
 
         } else {
@@ -40,6 +41,22 @@ public class Main {
                     "Perfil: "
                             + funcionario.getPerfil_funcionario()
             );
+
+            if ("ADMINISTRADOR".equalsIgnoreCase(
+                    funcionario.getPerfil_funcionario())) {
+
+                SwingUtilities.invokeLater(() -> {
+                    TelaCadastroFuncionario tela =
+                            new TelaCadastroFuncionario(funcionario);
+
+                    tela.setVisible(true);
+                });
+
+            } else {
+                System.out.println(
+                        "Seu perfil não tem permissão para cadastrar funcionários."
+                );
+            }
         }
 
         scanner.close();

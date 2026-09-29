@@ -2,7 +2,6 @@ public class Funcionario {
 
     private int id_funcionario;
     private String nome_funcionario;
-    private String login_funcionario;
     private String senha_funcionario;
     private String email_funcionario;
     private String perfil_funcionario;
@@ -12,10 +11,9 @@ public class Funcionario {
     private String data_exclusao;
     private String motivo_exclusao;
 
-    public Funcionario(String nome_funcionario, String email_funcionario, String senha_funcionario, String login_funcionario) {
+    public Funcionario(String nome_funcionario, String email_funcionario, String senha_funcionario) {
         this.nome_funcionario = nome_funcionario;
         this.email_funcionario = email_funcionario;
-        this.login_funcionario = login_funcionario;
         this.senha_funcionario = senha_funcionario;
     }
 
@@ -27,9 +25,6 @@ public class Funcionario {
         this.nome_funcionario = nome_funcionario;
     }
 
-    public void setLogin_funcionario(String login_funcionario) {
-        this.login_funcionario = login_funcionario;
-    }
 
     public void setEmail_funcionario(String email_funcionario) {
         this.email_funcionario = email_funcionario;
@@ -75,9 +70,7 @@ public class Funcionario {
         return this.perfil_funcionario;
     }
 
-    public String getLogin_funcionario (){
-        return this.login_funcionario;
-    }
+
 
     public String getStatus_funcionario (){
         return this.status_funcionario;

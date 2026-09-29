@@ -11,13 +11,12 @@ public class FuncionarioDAO {
                 SELECT
                     id_funcionario,
                     nome_funcionario,
-                    login_funcionario,
                     senha_funcionario,
                     email_funcionario,
                     perfil_funcionario,
                     status_funcionario
                 FROM funcionario
-                WHERE login_funcionario = ?
+                WHERE email_funcionario = ?
                 """;
 
         try (
@@ -40,16 +39,13 @@ public class FuncionarioDAO {
                     String senha =
                             resultado.getString("senha_funcionario");
 
-                    String loginBanco =
-                            resultado.getString("login_funcionario");
 
                     Funcionario funcionario =
                             new Funcionario(
                                     nome,
                                     email,
-                                    senha,
-                                    loginBanco
-                            );
+                                    senha
+                                    );
 
                     funcionario.setId_funcionario(
                             resultado.getInt("id_funcionario")
@@ -74,5 +70,46 @@ public class FuncionarioDAO {
         }
 
         return null;
+    }
+    public int cadastrar(Funcionario novo, int idAdministrador)
+            throws SQLException {
+
+        String sql = """
+            INSERT INTO funcionario (
+                nome_funcionario,
+                senha_funcionario,
+                email_funcionario,
+                perfil_funcionario,
+                status_funcionario,
+                id_funcionario_cadastrou
+            )
+            VALUES (?, ?, ?, ?, 'ATIVO', ?)
+            """;
+
+        try (
+                Connection conexao = Conexao.conectar();
+                PreparedStatement comando = conexao.prepareStatement(
+                        sql,
+                        java.sql.Statement.RETURN_GENERATED_KEYS
+                )
+        ) {
+            comando.setString(1, novo.getNome_funcionario());
+            comando.setString(2, novo.getSenha_funcionario());
+            comando.setString(3, novo.getEmail_funcionario());
+            comando.setString(4, novo.getPerfil_funcionario());
+            comando.setInt(5, idAdministrador);
+
+            comando.executeUpdate();
+
+            try (ResultSet resultado = comando.getGeneratedKeys()) {
+                if (resultado.next()) {
+                    return resultado.getInt(1);
+                }
+            }
+
+            throw new SQLException(
+                    "Cadastro realizado, mas o banco não retornou o ID."
+            );
+        }
     }
 }
