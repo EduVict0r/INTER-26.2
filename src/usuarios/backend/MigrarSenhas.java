@@ -1,3 +1,7 @@
+package usuarios.backend;
+
+import compartilhado.backend.Conexao;
+import compartilhado.backend.SenhaUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

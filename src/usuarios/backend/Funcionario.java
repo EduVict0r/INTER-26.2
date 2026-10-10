@@ -1,3 +1,5 @@
+package usuarios.backend;
+
 public class Funcionario {
 
     private int id_funcionario;

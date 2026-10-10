@@ -38,3 +38,6 @@ Thumbs.db
 
 ### Credenciais / configurações locais ###
 .env
+
+### Executável gerado pelo jpackage (~125 MB, passa do limite do GitHub) ###
+/executavel/

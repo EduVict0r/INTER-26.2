@@ -1,3 +1,6 @@
+package usuarios.backend;
+
+import compartilhado.backend.Conexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -5,7 +8,7 @@ import java.sql.SQLException;
 
 public class FuncionarioDAO {
 
-    public Funcionario buscarPorLogin(String login) {
+    public Funcionario buscarPorLogin(String login) throws SQLException {
 
         String sql = """
                 SELECT
@@ -62,13 +65,9 @@ public class FuncionarioDAO {
                     return funcionario;
                 }
             }
-
-        } catch (SQLException e) {
-
-            System.out.println("Erro ao buscar funcionário.");
-            e.printStackTrace();
         }
 
+        // Erros de banco sobem para quem chamou, para não parecerem "senha inválida".
         return null;
     }
     public int cadastrar(Funcionario novo, int idAdministrador)

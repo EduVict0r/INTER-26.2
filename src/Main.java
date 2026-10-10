@@ -1,64 +1,44 @@
-import java.util.Scanner;
+import compartilhado.backend.ConfiguracaoBanco;
+import compartilhado.backend.Conexao;
+import compartilhado.frontend.DialogoConfiguracaoBanco;
+import login.frontend.TelaLogin;
+
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import java.sql.SQLException;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        // Texto suavizado nas telas desenhadas à mão.
+        System.setProperty("awt.useSystemAAFontSettings", "on");
 
-        FuncionarioService funcionarioService =
-                new FuncionarioService();
-
-        System.out.print("Email: ");
-        String login = scanner.nextLine();
-
-        System.out.print("Senha: ");
-        String senha = scanner.nextLine();
-
-        Funcionario funcionario =
-                funcionarioService.autenticar(login, senha);
-
-        if (funcionario == null) {
-
-            System.out.println(
-                    "Email ou senha inválidos."
-            );
-
-        } else {
-
-            System.out.println();
-            System.out.println(
-                    "Login realizado com sucesso!"
-            );
-
-            System.out.println(
-                    "Bem-vindo, "
-                            + funcionario.getNome_funcionario()
-            );
-
-            System.out.println(
-                    "Perfil: "
-                            + funcionario.getPerfil_funcionario()
-            );
-
-            if ("ADMINISTRADOR".equalsIgnoreCase(
-                    funcionario.getPerfil_funcionario())) {
-
-                SwingUtilities.invokeLater(() -> {
-                    TelaCadastroFuncionario tela =
-                            new TelaCadastroFuncionario(funcionario);
-
-                    tela.setVisible(true);
-                });
-
-            } else {
-                System.out.println(
-                        "Seu perfil não tem permissão para cadastrar funcionários."
-                );
-            }
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            // Se não conseguir, segue com o visual padrão do Java.
         }
 
-        scanner.close();
+        // Testa o banco antes de abrir as telas (fora da thread da interface).
+        String erroConexao = testarConexao();
+
+        SwingUtilities.invokeLater(() -> {
+            if (erroConexao != null && !DialogoConfiguracaoBanco.configurar(erroConexao)) {
+                System.exit(0);
+            }
+            new TelaLogin().setVisible(true);
+        });
+    }
+
+    // Retorna null se conectou, ou a mensagem de erro.
+    private static String testarConexao() {
+        try {
+            Conexao.testar(ConfiguracaoBanco.atual());
+            return null;
+        } catch (SQLException e) {
+            System.out.println("Falha ao conectar no banco: " + e.getMessage());
+            return e.getMessage();
+        }
     }
 }

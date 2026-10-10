@@ -1,3 +1,7 @@
+package usuarios.frontend;
+
+import usuarios.backend.Funcionario;
+import usuarios.backend.FuncionarioService;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
